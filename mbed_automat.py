@@ -57,6 +57,7 @@ def main():
                 sleep(2)
             except FileNotFoundError:
                 print('No file matches ' + filenameWildcard)
+                sleep(.8)
 
     except KeyboardInterrupt:
         print('Exiting...')
@@ -67,7 +68,7 @@ def findFile(where: str, filenameHint: str):
     from glob import glob
     from os import chdir
     chdir(where)
-    for file in glob(filenameHint):
+    for file in glob(filenameHint):  # to-do: change to iterator to conserve resources ?? pr no need
         return file
     raise FileNotFoundError
 
