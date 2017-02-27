@@ -11,18 +11,19 @@ args = vars(parser.parse_args())
 
 
 def main():
-    if not args['source']:
+    if not args['source']:  # if source not set, set some default windows path
         from os import path
 
         newSource = {'source': path.join('D:/', 'Downloads')}
         args.update(newSource)
 
-    ntimes = None
+    ntimes = None  # some local int or None
     if args['ntimes']:
         ntimes = int(args['ntimes'])
 
-    filenameWildcard = '*' + args['text'] + '*.bin'
+    filenameWildcard = '*' + args['text'] + '*.bin'  # not sanitizing input, yolo !
 
+    # and print the summary
     print('Looking for files ' + filenameWildcard + ' at ' + args['source'] + ', then copying them to ' + args[
         'board'] + (' forever' if not args['ntimes'] else ' ' + str(ntimes) + ' times') + '.')
 
@@ -34,24 +35,29 @@ def main():
     try:
         while not args['ntimes'] or executedTimes < ntimes:
             try:
-                filename = findFile(args['source'], filenameWildcard)
+                filename = findFile(args['source'], filenameWildcard)  # determine real os's filename
+                # if found /\, proceed
                 beeper.warning()
+                # various boards cases
                 if 'mbuino' in args['text'].lower():
-                    print('mbuino detected. Deleting "firmware.bin"...', end='')
+                    print('mbuino detected. Deleting "firmware.bin"...',
+                          end='')  # delete exisitng firmware from the board
                     from os import remove
                     remove(path.join(args['board'], path.sep, 'firmware.bin'))
+                    # if not except, then go on
                     print('ok')
                     beeper.during()
+                # now flashing
                 print('Moving file ' + filename)
                 sourcePath = path.join(args['source'], filename)
                 destPath = path.join(args['board'], path.sep)
-                move(sourcePath, destPath)
+                move(sourcePath, destPath)  # to do: some write error handling
                 beeper.finished()
+                executedTimes = executedTimes + 1
+                sleep(2)
             except FileNotFoundError:
                 print('No file matches ' + filenameWildcard)
 
-            sleep(2)
-            executedTimes = executedTimes + 1
     except KeyboardInterrupt:
         print('Exiting...')
         exit(0)
