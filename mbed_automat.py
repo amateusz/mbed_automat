@@ -40,13 +40,17 @@ def main():
                 beeper.warning()
                 # various boards cases
                 if 'mbuino' in args['text'].lower():
-                    print('mbuino detected. Deleting "firmware.bin"...',
+                    print('mbuino detected. First deleting "firmware.bin"...',
                           end='')  # delete exisitng firmware from the board
                     from os import remove
                     remove(path.join(args['board'], path.sep, 'firmware.bin'))
                     # if not except, then go on
                     print('ok')
                     beeper.during()
+                elif 'nulceo' in args['text'].lower():
+                    pass  # nothing special for nucleo
+                # elif add your board here
+
                 # now flashing
                 print('Moving file ' + filename)
                 sourcePath = path.join(args['source'], filename)
