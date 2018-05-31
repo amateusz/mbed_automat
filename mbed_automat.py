@@ -79,9 +79,16 @@ def findFile(where: str, filenameHint: str):
 
 class Beeper():
     def __init__(self):
-        from winsound import Beep
-        self.Beep = Beep
-
+        from sys import platform
+        if 'linux' in platform.lower():
+            self._platform = 'linux'
+            self.Beep = None
+        elif 'win' in platform.lower():       
+            self._platform = 'windows'
+            from winsound import Beep
+            self.Beep = Beep
+    
+    @try_func
     def during(self):
         self.Beep(1200, 320)
 
@@ -90,6 +97,12 @@ class Beeper():
 
     def finished(self):
         self.Beep(1950, 310)
+    
+    def try_func(func):
+        try:
+            func()
+        except:
+            pass
 
 
 if __name__ == '__main__':
