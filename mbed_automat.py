@@ -98,7 +98,7 @@ class Beeper():
     def finished(self):
         self.Beep(1950, 310)
     
-    def try_func(func):
+    def try_func(self, func):
         try:
             func()
         except:
