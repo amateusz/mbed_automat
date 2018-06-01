@@ -77,6 +77,8 @@ def findFile(where: str, filenameHint: str):
     raise FileNotFoundError
 
 
+
+
 class Beeper():
     def __init__(self):
         from sys import platform
@@ -88,21 +90,18 @@ class Beeper():
             from winsound import Beep
             self.Beep = Beep
     
-    @try_func
     def during(self):
-        self.Beep(1200, 320)
-
-    def warning(self):
-        self.Beep(600, 270)
-
-    def finished(self):
-        self.Beep(1950, 310)
+        if self.Beep:
+            self.Beep(1200, 320)
     
-    def try_func(self, func):
-        try:
-            func()
-        except:
-            pass
+    def warning(self):
+        if self.Beep:
+            self.Beep(600, 270)
+    
+    def finished(self):
+        if self.Beep:
+            self.Beep(1950, 310)   
+
 
 
 if __name__ == '__main__':
